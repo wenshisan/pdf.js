@@ -249,6 +249,7 @@ class PDFPageView {
   }
 
   async _buildXfaTextContentItems(textDivs) {
+    
     const text = await this.pdfPage.getTextContent();
     const items = [];
     for (const item of text.items) {

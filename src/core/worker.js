@@ -279,6 +279,9 @@ class WorkerMessageHandler {
       let loaded = 0;
       const flushChunks = function () {
         const pdfFile = arraysToBytes(cachedChunks);
+        console.log("pdfFile array");
+        console.log(pdfFile);
+        
         if (source.length && pdfFile.length !== source.length) {
           warn("reported HTTP length is different from actual");
         }

@@ -519,6 +519,10 @@ class Page {
 
     const dataPromises = Promise.all([contentStreamPromise, resourcesPromise]);
     return dataPromises.then(([contentStream]) => {
+      // console.log("contentStr: ");
+      // const contentStr = contentStream.getString(5000);
+      // console.log(contentStr);
+
       const partialEvaluator = new PartialEvaluator({
         xref: this.xref,
         handler,

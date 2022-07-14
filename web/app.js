@@ -1551,7 +1551,7 @@ const PDFViewerApplication = {
 
     // Provides some basic debug information
     console.log(
-      `PDF ${pdfDocument.fingerprints[0]} [${info.PDFFormatVersion} ` +
+      `ChenPDF ${pdfDocument.fingerprints[0]} [${info.PDFFormatVersion} ` +
         `${(info.Producer || "-").trim()} / ${(info.Creator || "-").trim()}] ` +
         `(PDF.js: ${version || "-"})`
     );
