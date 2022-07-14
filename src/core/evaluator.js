@@ -2549,9 +2549,11 @@ class PartialEvaluator {
       let posX = currentTransform[4];
       let posY = currentTransform[5];
 
-      const shiftedX = posX - viewBox[0];
+      //const shiftedX = posX - viewBox[0];
       const shiftedY = posY - viewBox[1];
 
+      //2022年7月14日 陈文磊 如果x方向position小于0则认为默认是可视区域的边界
+      const shiftedX = posX < 0 ? viewBox[0] : posX - viewBox[0];
       if (
         shiftedX < 0 ||
         shiftedX > viewBox[2] ||
@@ -2559,6 +2561,10 @@ class PartialEvaluator {
         shiftedY > viewBox[3]
       ) {
         console.log("compareWithLastPosition: ");
+        console.log("viewBox: ");
+        console.log(viewBox);
+        console.log("currentTransform: ");
+        console.log(currentTransform);
         console.log("viewBox[2] > shiftedX > 0 : " + shiftedX);
         console.log("viewBox[2]: " + viewBox[2]);
         console.log("shiftedY: " + shiftedY);
