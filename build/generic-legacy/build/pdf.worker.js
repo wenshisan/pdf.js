@@ -165,7 +165,7 @@ var WorkerMessageHandler = /*#__PURE__*/function () {
       var WorkerTasks = [];
       var verbosity = (0, _util.getVerbosityLevel)();
       var apiVersion = docParams.apiVersion;
-      var workerVersion = '2.15.265';
+      var workerVersion = '2.15.266';
 
       if (apiVersion !== workerVersion) {
         throw new Error("The API version \"".concat(apiVersion, "\" does not match ") + "the Worker version \"".concat(workerVersion, "\"."));
@@ -31957,8 +31957,6 @@ var PartialEvaluator = /*#__PURE__*/function () {
       resources = resources || _primitives.Dict.empty;
       stateManager = stateManager || new StateManager(new TextState());
       var NormalizedUnicodes = (0, _unicode.getNormalizedUnicodes)();
-      console.log("NormalizedUnicodes: ");
-      console.log(NormalizedUnicodes);
       var textContent = {
         items: [],
         styles: Object.create(null)
@@ -32377,8 +32375,6 @@ var PartialEvaluator = /*#__PURE__*/function () {
           }
 
           var glyphUnicode = glyph.unicode;
-          console.log("取得Unicode: ");
-          console.log(glyph.unicode);
           glyphUnicode = NormalizedUnicodes[glyphUnicode] || glyphUnicode;
           glyphUnicode = (0, _unicode.reverseIfRtl)(glyphUnicode);
 
@@ -92863,8 +92859,8 @@ Object.defineProperty(exports, "WorkerMessageHandler", ({
 
 var _worker = __w_pdfjs_require__(1);
 
-var pdfjsVersion = '2.15.265';
-var pdfjsBuild = 'dff0aa661';
+var pdfjsVersion = '2.15.266';
+var pdfjsBuild = '15a87974f';
 })();
 
 /******/ 	return __webpack_exports__;

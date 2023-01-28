@@ -2278,8 +2278,8 @@ class PartialEvaluator {
 
     const NormalizedUnicodes = getNormalizedUnicodes();
 
-    console.log("NormalizedUnicodes: ");
-    console.log(NormalizedUnicodes);
+    // console.log("NormalizedUnicodes: ");
+    // console.log(NormalizedUnicodes);
 
     const textContent = {
       items: [],
@@ -2842,8 +2842,8 @@ class PartialEvaluator {
         }
 
         let glyphUnicode = glyph.unicode;
-        console.log("取得Unicode: ");
-        console.log(glyph.unicode);
+        // console.log("取得Unicode: ");
+        // console.log(glyph.unicode);
         glyphUnicode = NormalizedUnicodes[glyphUnicode] || glyphUnicode;
         glyphUnicode = reverseIfRtl(glyphUnicode);
         if (saveLastChar(glyphUnicode)) {
