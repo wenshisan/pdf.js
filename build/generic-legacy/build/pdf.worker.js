@@ -165,7 +165,7 @@ var WorkerMessageHandler = /*#__PURE__*/function () {
       var WorkerTasks = [];
       var verbosity = (0, _util.getVerbosityLevel)();
       var apiVersion = docParams.apiVersion;
-      var workerVersion = '2.15.264';
+      var workerVersion = '2.15.265';
 
       if (apiVersion !== workerVersion) {
         throw new Error("The API version \"".concat(apiVersion, "\" does not match ") + "the Worker version \"".concat(workerVersion, "\"."));
@@ -32137,15 +32137,6 @@ var PartialEvaluator = /*#__PURE__*/function () {
         var shiftedX = posX < 0 ? viewBox[0] : posX - viewBox[0];
 
         if (shiftedX < 0 || shiftedX > viewBox[2] || shiftedY < 0 || shiftedY > viewBox[3]) {
-          console.log("compareWithLastPosition: ");
-          console.log("viewBox: ");
-          console.log(viewBox);
-          console.log("currentTransform: ");
-          console.log(currentTransform);
-          console.log("viewBox[2] > shiftedX > 0 : " + shiftedX);
-          console.log("viewBox[2]: " + viewBox[2]);
-          console.log("shiftedY: " + shiftedY);
-          console.log("shiftedY > viewBox[3] > 0: " + viewBox[3]);
           return false;
         }
 
@@ -32312,8 +32303,6 @@ var PartialEvaluator = /*#__PURE__*/function () {
       function buildTextContentItem(_ref14) {
         var chars = _ref14.chars,
             extraSpacing = _ref14.extraSpacing;
-        console.log("创建Text,Chars:");
-        console.log(chars.toString());
         var font = textState.font;
 
         if (!chars) {
@@ -32331,7 +32320,6 @@ var PartialEvaluator = /*#__PURE__*/function () {
         }
 
         var glyphs = font.charsToGlyphs(chars);
-        console.log(glyphs);
         var scale = textState.fontMatrix[0] * textState.fontSize;
 
         for (var i = 0, ii = glyphs.length; i < ii; i++) {
@@ -92875,8 +92863,8 @@ Object.defineProperty(exports, "WorkerMessageHandler", ({
 
 var _worker = __w_pdfjs_require__(1);
 
-var pdfjsVersion = '2.15.264';
-var pdfjsBuild = 'a2fda86b0';
+var pdfjsVersion = '2.15.265';
+var pdfjsBuild = 'dff0aa661';
 })();
 
 /******/ 	return __webpack_exports__;

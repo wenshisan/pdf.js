@@ -2560,15 +2560,15 @@ class PartialEvaluator {
         shiftedY < 0 ||
         shiftedY > viewBox[3]
       ) {
-        console.log("compareWithLastPosition: ");
-        console.log("viewBox: ");
-        console.log(viewBox);
-        console.log("currentTransform: ");
-        console.log(currentTransform);
-        console.log("viewBox[2] > shiftedX > 0 : " + shiftedX);
-        console.log("viewBox[2]: " + viewBox[2]);
-        console.log("shiftedY: " + shiftedY);
-        console.log("shiftedY > viewBox[3] > 0: " + viewBox[3]);
+        // console.log("compareWithLastPosition: ");
+        // console.log("viewBox: ");
+        // console.log(viewBox);
+        // console.log("currentTransform: ");
+        // console.log(currentTransform);
+        // console.log("viewBox[2] > shiftedX > 0 : " + shiftedX);
+        // console.log("viewBox[2]: " + viewBox[2]);
+        // console.log("shiftedY: " + shiftedY);
+        // console.log("shiftedY > viewBox[3] > 0: " + viewBox[3]);
         return false;
       }
 
@@ -2754,9 +2754,9 @@ class PartialEvaluator {
     }
 
     function buildTextContentItem({ chars, extraSpacing }) {
-      ///有可能这步出问题 2022年7月14日 陈文磊
-      console.log("创建Text,Chars:");
-      console.log(chars.toString());
+      // 有可能这步出问题 2022年7月14日 陈文磊
+      // console.log("创建Text,Chars:");
+      // console.log(chars.toString());
       const font = textState.font;
       if (!chars) {
         // Just move according to the space we have.
@@ -2776,7 +2776,7 @@ class PartialEvaluator {
       }
 
       const glyphs = font.charsToGlyphs(chars);
-      console.log(glyphs); //到这步依然正常显示字符 2022年7月14日 陈文磊
+      // console.log(glyphs); // 到这步依然正常显示字符 2022年7月14日 陈文磊
       const scale = textState.fontMatrix[0] * textState.fontSize;
 
       for (let i = 0, ii = glyphs.length; i < ii; i++) {
@@ -2813,7 +2813,7 @@ class PartialEvaluator {
           continue;
         }
 
-        ///错误会使某些文本丢失 2022年7月14日 陈文磊
+        // 错误会使某些文本丢失 2022年7月14日 陈文磊
         if (!compareWithLastPosition()) {
           // The glyph is not in page so just skip it.
           continue;
