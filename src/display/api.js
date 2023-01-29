@@ -1647,8 +1647,8 @@ class PDFPageProxy {
    *   {@link TextContent} object that represents the page's text content.
    */
   getTextContent(params = {}) {
-    console.log("开始读取Text");
-    console.log(this);
+    // console.log("开始读取Text");
+    // console.log(this);
     if (this._transport._htmlForXfa) {
       // TODO: We need to revisit this once the XFA foreground patch lands and
       // only do this for non-foreground XFA.
@@ -1658,8 +1658,8 @@ class PDFPageProxy {
     }
     const readableStream = this.streamTextContent(params);
 
-    console.log("读取到的Text Stream");
-    console.log(readableStream);
+    // console.log("读取到的Text Stream");
+    // console.log(readableStream);
     return new Promise(function (resolve, reject) {
       function pump() {
         reader.read().then(function ({ value, done }) {
@@ -1669,7 +1669,7 @@ class PDFPageProxy {
           }
           Object.assign(textContent.styles, value.styles);
 
-          console.log(value.items);
+          // console.log(value.items);
           textContent.items.push(...value.items);
           pump();
         }, reject);

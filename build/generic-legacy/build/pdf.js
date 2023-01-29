@@ -4930,7 +4930,7 @@ function _fetchDocument2() {
             _context7.next = 5;
             return worker.messageHandler.sendWithPromise("GetDocRequest", {
               docId: docId,
-              apiVersion: '2.15.266',
+              apiVersion: '2.15.267',
               source: {
                 data: source.data,
                 url: source.url,
@@ -5804,8 +5804,6 @@ var PDFPageProxy = /*#__PURE__*/function () {
     key: "getTextContent",
     value: function getTextContent() {
       var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      console.log("开始读取Text");
-      console.log(this);
 
       if (this._transport._htmlForXfa) {
         return this.getXfa().then(function (xfa) {
@@ -5814,8 +5812,6 @@ var PDFPageProxy = /*#__PURE__*/function () {
       }
 
       var readableStream = this.streamTextContent(params);
-      console.log("读取到的Text Stream");
-      console.log(readableStream);
       return new Promise(function (resolve, reject) {
         function pump() {
           reader.read().then(function (_ref10) {
@@ -5830,7 +5826,6 @@ var PDFPageProxy = /*#__PURE__*/function () {
             }
 
             Object.assign(textContent.styles, value.styles);
-            console.log(value.items);
 
             (_textContent$items = textContent.items).push.apply(_textContent$items, _toConsumableArray(value.items));
 
@@ -7802,9 +7797,9 @@ var _canvasInUse = {
   writable: true,
   value: new WeakSet()
 };
-var version = '2.15.266';
+var version = '2.15.267';
 exports.version = version;
-var build = '15a87974f';
+var build = 'd31617b7e';
 exports.build = build;
 
 /***/ }),
@@ -28403,8 +28398,8 @@ var _svg = __w_pdfjs_require__(156);
 
 var _xfa_layer = __w_pdfjs_require__(154);
 
-var pdfjsVersion = '2.15.266';
-var pdfjsBuild = '15a87974f';
+var pdfjsVersion = '2.15.267';
+var pdfjsBuild = 'd31617b7e';
 {
   if (_is_node.isNodeJS) {
     var _require = __w_pdfjs_require__(157),
