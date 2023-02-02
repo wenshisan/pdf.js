@@ -158,6 +158,10 @@ class PDFPageView {
     this.xfaLayer = null;
     this.structTreeLayer = null;
 
+    // 2022年5月10日 陈文磊 每次调用renderAnnotEvent时刷新annots实例
+    this.annots = undefined;
+    this.popupElements = [];
+
     const div = document.createElement("div");
     div.className = "page";
     div.style.width = Math.floor(this.viewport.width) + "px";
@@ -249,7 +253,6 @@ class PDFPageView {
   }
 
   async _buildXfaTextContentItems(textDivs) {
-    
     const text = await this.pdfPage.getTextContent();
     const items = [];
     for (const item of text.items) {
@@ -674,7 +677,9 @@ class PDFPageView {
           /* hasJSActionsPromise = */ null,
           /* mouseState = */ null,
           /* fieldObjectsPromise = */ null,
-          /* annotationCanvasMap */ this._annotationCanvasMap
+          /* annotationCanvasMap */ this._annotationCanvasMap,
+          // 2023年2月2日 陈文磊 新增以下
+          this.popupElements
         );
     }
 

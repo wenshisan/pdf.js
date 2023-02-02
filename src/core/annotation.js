@@ -29,6 +29,7 @@ import {
   LINE_DESCENT_FACTOR,
   LINE_FACTOR,
   OPS,
+  // eslint-disable-next-line no-unused-vars
   RenderingIntentFlag,
   shadow,
   stringToPDFString,
@@ -874,62 +875,67 @@ class Annotation {
     renderForms,
     annotationStorage
   ) {
-    const data = this.data;
-    let appearance = this.appearance;
-    const isUsingOwnCanvas =
-      this.data.hasOwnCanvas && intent & RenderingIntentFlag.DISPLAY;
-    if (!appearance) {
-      if (!isUsingOwnCanvas) {
-        return new OperatorList();
-      }
-      appearance = new StringStream("");
-      appearance.dict = new Dict();
-    }
+    // 2022年4月20日 陈文磊
+    // canvas渲染批注改为使用annotationlayer
+    const opl = new OperatorList();
+    return opl;
 
-    const appearanceDict = appearance.dict;
-    const resources = await this.loadResources(
-      ["ExtGState", "ColorSpace", "Pattern", "Shading", "XObject", "Font"],
-      appearance
-    );
-    const bbox = appearanceDict.getArray("BBox") || [0, 0, 1, 1];
-    const matrix = appearanceDict.getArray("Matrix") || [1, 0, 0, 1, 0, 0];
-    const transform = getTransformMatrix(data.rect, bbox, matrix);
+    // const data = this.data;
+    // let appearance = this.appearance;
+    // const isUsingOwnCanvas =
+    //   this.data.hasOwnCanvas && intent & RenderingIntentFlag.DISPLAY;
+    // if (!appearance) {
+    //   if (!isUsingOwnCanvas) {
+    //     return new OperatorList();
+    //   }
+    //   appearance = new StringStream("");
+    //   appearance.dict = new Dict();
+    // }
 
-    const opList = new OperatorList();
+    // const appearanceDict = appearance.dict;
+    // const resources = await this.loadResources(
+    //   ["ExtGState", "ColorSpace", "Pattern", "Shading", "XObject", "Font"],
+    //   appearance
+    // );
+    // const bbox = appearanceDict.getArray("BBox") || [0, 0, 1, 1];
+    // const matrix = appearanceDict.getArray("Matrix") || [1, 0, 0, 1, 0, 0];
+    // const transform = getTransformMatrix(data.rect, bbox, matrix);
 
-    let optionalContent;
-    if (this.oc) {
-      optionalContent = await evaluator.parseMarkedContentProps(
-        this.oc,
-        /* resources = */ null
-      );
-    }
-    if (optionalContent !== undefined) {
-      opList.addOp(OPS.beginMarkedContentProps, ["OC", optionalContent]);
-    }
+    // const opList = new OperatorList();
 
-    opList.addOp(OPS.beginAnnotation, [
-      data.id,
-      data.rect,
-      transform,
-      matrix,
-      isUsingOwnCanvas,
-    ]);
+    // let optionalContent;
+    // if (this.oc) {
+    //   optionalContent = await evaluator.parseMarkedContentProps(
+    //     this.oc,
+    //     /* resources = */ null
+    //   );
+    // }
+    // if (optionalContent !== undefined) {
+    //   opList.addOp(OPS.beginMarkedContentProps, ["OC", optionalContent]);
+    // }
 
-    await evaluator.getOperatorList({
-      stream: appearance,
-      task,
-      resources,
-      operatorList: opList,
-      fallbackFontDict: this._fallbackFontDict,
-    });
-    opList.addOp(OPS.endAnnotation, []);
+    // opList.addOp(OPS.beginAnnotation, [
+    //   data.id,
+    //   data.rect,
+    //   transform,
+    //   matrix,
+    //   isUsingOwnCanvas,
+    // ]);
 
-    if (optionalContent !== undefined) {
-      opList.addOp(OPS.endMarkedContent, []);
-    }
-    this.reset();
-    return opList;
+    // await evaluator.getOperatorList({
+    //   stream: appearance,
+    //   task,
+    //   resources,
+    //   operatorList: opList,
+    //   fallbackFontDict: this._fallbackFontDict,
+    // });
+    // opList.addOp(OPS.endAnnotation, []);
+
+    // if (optionalContent !== undefined) {
+    //   opList.addOp(OPS.endMarkedContent, []);
+    // }
+    // this.reset();
+    // return opList;
   }
 
   async save(evaluator, task, annotationStorage) {

@@ -175,6 +175,9 @@ class AnnotationElement {
     this.hasJSActions = parameters.hasJSActions;
     this._fieldObjects = parameters.fieldObjects;
     this._mouseState = parameters.mouseState;
+    // 2023年2月2日 陈文磊 以下新增字段
+    this.popupElements = parameters.popupElements; // 所有的批注弹窗集合
+    this.isHighLightItem = parameters.isHighLightItem;
 
     if (isRenderable) {
       this.container = this._createContainer(ignoreBorder);
@@ -465,13 +468,26 @@ class AnnotationElement {
       contentsObj: data.contentsObj,
       richText: data.richText,
       hideWrapper: true,
+      // 2023年2月2日 陈文磊 以下新增字段
+      popupElements: this.popupElements,
+      page: this.page,
+      data: this.data,
+      linkService: this.linkService,
+      isHighLightItem: this.isHighLightItem,
     });
     const popup = popupElement.render();
+    // 2022年6月27日 陈文磊 弹出窗 默认在文字下方
+    popup.style.top = "15px";
+    // popup.style.left = container.style.width.replace("px", "") - popup.
+    // style.width.replace("px", "") + "px";
+    popup.style.left = "0px";
+    popup.style.right = "230px";
 
     // Position the popup next to the annotation's container.
-    popup.style.left = "100%";
+    // popup.style.left = "100%";
 
     container.append(popup);
+    this.popupElements.push(popupElement);
   }
 
   /**
@@ -1772,8 +1788,9 @@ class PopupElement {
   }
 
   render() {
-    const BACKGROUND_ENLIGHT = 0.7;
-
+    // const BACKGROUND_ENLIGHT = 0.7;
+    // 2023年2月2日 陈文磊 透明度改为0.3
+    const BACKGROUND_ENLIGHT = 0.3;
     const wrapper = document.createElement("div");
     wrapper.className = "popupWrapper";
 
@@ -1786,19 +1803,20 @@ class PopupElement {
 
     const popup = document.createElement("div");
     popup.className = "popup";
-
+    // 2023年2月2日 陈文磊 设置背景色白色 tilte颜色
+    popup.style.backgroundColor = "white";
     const color = this.color;
+    const title = document.createElement("h1");
+    title.dir = this.titleObj.dir;
+    title.textContent = this.titleObj.str;
     if (color) {
       // Enlighten the color.
       const r = BACKGROUND_ENLIGHT * (255 - color[0]) + color[0];
       const g = BACKGROUND_ENLIGHT * (255 - color[1]) + color[1];
       const b = BACKGROUND_ENLIGHT * (255 - color[2]) + color[2];
-      popup.style.backgroundColor = Util.makeHexColor(r | 0, g | 0, b | 0);
+      // popup.style.backgroundColor = Util.makeHexColor(r | 0, g | 0, b | 0);
+      title.style.color = Util.makeHexColor(r | 0, g | 0, b | 0);
     }
-
-    const title = document.createElement("h1");
-    title.dir = this.titleObj.dir;
-    title.textContent = this.titleObj.str;
     popup.append(title);
 
     // The modification date is shown in the popup instead of the creation
@@ -1836,16 +1854,110 @@ class PopupElement {
       this.trigger = [this.trigger];
     }
 
+    // 2023年2月2日 陈文磊 添加批注背景色
+    const annotEnLight = 0.4;
     // Attach the event listeners to the trigger element.
     for (const element of this.trigger) {
-      element.addEventListener("click", this._toggle.bind(this));
-      element.addEventListener("mouseover", this._show.bind(this, false));
-      element.addEventListener("mouseout", this._hide.bind(this, false));
+      if (color && this.isHighLightItem) {
+        // Enlighten the color.
+        const r = annotEnLight * (255 - color[0]) + color[0];
+        const g = annotEnLight * (255 - color[1]) + color[1];
+        const b = annotEnLight * (255 - color[2]) + color[2];
+        element.style.backgroundColor = `rgba(${r},
+          ${g},${b},0.3)`;
+      }
+
+      // 2023年2月2日 陈文磊 批注展示层添加点击方法
+      if (!this.isHighLightItem && element !== this) {
+        element.addEventListener("click", this.onAnnotClick.bind(this));
+        element.addEventListener("mouseover", this._show.bind(this, false));
+        element.addEventListener("mouseout", this._hide.bind(this, false));
+      }
+
+      // element.addEventListener("click", this._toggle.bind(this));
+      // element.addEventListener("mouseover", this._show.bind(this, false));
+      // element.addEventListener("mouseout", this._hide.bind(this, false));
+    }
+    if (!this.isHighLightItem) {
+      popup.addEventListener("click", this.onOpopUpClick.bind(this));
     }
     popup.addEventListener("click", this._hide.bind(this, true));
 
     wrapper.append(popup);
     return wrapper;
+  }
+
+  /**
+   * 批注和批注弹出支持点击后关闭其他弹出
+   2022年4月15日 陈文磊
+   */
+  onAnnotClick() {
+    console.log("onAnnot clicked:");
+    if (!this.isHighLightItem && this.linkService) {
+      this.linkService.eventBus?.dispatch("highlightAnnotClicked", {
+        source: this,
+      });
+
+      this.popupElements.forEach(x => x._hide(true));
+
+      // 获取匹配高亮元素
+      const matchedHighlightItem = this.popupElements.find(
+        (v, i) =>
+          v.data.annotID &&
+          v.data.annotID === this.data.annotID &&
+          // v.data.rect[0] == this.data.rect[0] &&
+          // v.data.rect[2] == this.data.rect[2] &&
+          // v.data.rect[3] == this.data.rect[3] &&
+          v.isHighLightItem
+      );
+
+      console.log("matchedHighlightItem: ");
+      console.log(matchedHighlightItem);
+
+      if (matchedHighlightItem) {
+        matchedHighlightItem._show(true);
+      }
+
+      this._show(true);
+    }
+  }
+
+  /**
+   * 高亮批注时颜色浓度提高到60% 陈文磊 2022年4月18日
+   */
+  onHighlightAnnot(popup, opacity) {
+    const color = popup.color;
+    const BACKGROUND_ENLIGHT = 0.4;
+
+    // 高亮全部匹配的Section
+    // const matchedPopups = popup.popupElements.filter((v, i) =>
+    // v.contentsObj.str == popup.contentsObj.str && v.isHighLightItem);
+
+    const matchedPopups = popup.popupElements.filter(
+      (v, i) =>
+        v.data.annotID &&
+        v.data.annotID === popup.data.annotID &&
+        v.isHighLightItem
+    );
+
+    if (color && matchedPopups.length > 0) {
+      console.log("onHighlightAnnot: ");
+      console.log(popup);
+      if (popup.contentsObj.str.includes("精力允")) {
+        console.log(matchedPopups);
+      }
+      // Enlighten the color.
+      const r = BACKGROUND_ENLIGHT * (255 - color[0]) + color[0];
+      const g = BACKGROUND_ENLIGHT * (255 - color[1]) + color[1];
+      const b = BACKGROUND_ENLIGHT * (255 - color[2]) + color[2];
+
+      matchedPopups.forEach(matchedPopup => {
+        for (const annotSection of matchedPopup.trigger) {
+          annotSection.style.backgroundColor = `rgba(${r},
+            ${g},${b},${opacity})`;
+        }
+      });
+    }
   }
 
   /**
@@ -2459,7 +2571,8 @@ class AnnotationLayer {
    */
   static render(parameters) {
     const { annotations, div, viewport } = parameters;
-
+    // 2023年2月2日 陈文磊 批注展示层
+    const highlightDiv = parameters.highlightDiv;
     this.#setDimensions(div, viewport);
 
     const sortedAnnotations = [],
@@ -2502,15 +2615,48 @@ class AnnotationLayer {
         hasJSActions: parameters.hasJSActions,
         fieldObjects: parameters.fieldObjects,
         mouseState: parameters.mouseState || { isDown: false },
+        // 2023年2月2日 陈文磊 以下新增
+        highlightDiv,
+        isHighLightItem: false,
+        popupElements: parameters.popupElements,
+      });
+
+      // 2023年2月2日 陈文磊 新增批注高亮层
+      const highlightAnnotElement = AnnotationElementFactory.create({
+        data,
+        layer: div,
+        page: parameters.page,
+        viewport: parameters.viewport,
+        linkService: parameters.linkService,
+        downloadManager: parameters.downloadManager,
+        imageResourcesPath: parameters.imageResourcesPath || "",
+        renderForms: parameters.renderForms !== false,
+        svgFactory: new DOMSVGFactory(),
+        annotationStorage:
+          parameters.annotationStorage || new AnnotationStorage(),
+        enableScripting: parameters.enableScripting,
+        hasJSActions: parameters.hasJSActions,
+        fieldObjects: parameters.fieldObjects,
+        mouseState: parameters.mouseState || { isDown: false },
+        // 2023年2月2日 陈文磊 新增以下
+        highlightDiv,
+        isHighLightItem: true,
+        popupElements: parameters.popupElements,
       });
       if (element.isRenderable) {
         const rendered = element.render();
+        // 2023年2月2日 陈文磊 批注对象集合
+        const renderedHiglight = highlightAnnotElement.render();
         if (data.hidden) {
           rendered.style.visibility = "hidden";
         }
         if (Array.isArray(rendered)) {
           for (const renderedElement of rendered) {
-            div.append(renderedElement);
+            div.app(renderedElement);
+          }
+          // 2023年2月2日 陈文磊 高亮层增加批注对象
+          for (const renderedElement of renderedHiglight) {
+            highlightDiv.append(renderedElement);
           }
         } else {
           if (element instanceof PopupAnnotationElement) {

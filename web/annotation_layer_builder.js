@@ -40,6 +40,7 @@ import { NullL10n } from "./l10n_utils.js";
  *   [fieldObjectsPromise]
  * @property {Object} [mouseState]
  * @property {Map<string, HTMLCanvasElement>} [annotationCanvasMap]
+ * @property {Object} [popupElements] - 展开后的批注弹出.
  */
 
 class AnnotationLayerBuilder {
@@ -60,6 +61,8 @@ class AnnotationLayerBuilder {
     fieldObjectsPromise = null,
     mouseState = null,
     annotationCanvasMap = null,
+    // 2023年2月2日 陈文磊 新增以下
+    popupElements,
   }) {
     this.pageDiv = pageDiv;
     this.pdfPage = pdfPage;
@@ -77,6 +80,10 @@ class AnnotationLayerBuilder {
 
     this.div = null;
     this._cancelled = false;
+
+    // 2023年2月2日 陈文磊 新增以下
+    this.popupElements = popupElements;
+    this.highlightDiv = null;
   }
 
   /**
@@ -85,21 +92,28 @@ class AnnotationLayerBuilder {
    * @returns {Promise<void>} A promise that is resolved when rendering of the
    *   annotations is complete.
    */
-  async render(viewport, intent = "display") {
-    const [annotations, hasJSActions = false, fieldObjects = null] =
-      await Promise.all([
-        this.pdfPage.getAnnotations({ intent }),
-        this._hasJSActionsPromise,
-        this._fieldObjectsPromise,
-      ]);
+  async render(viewport, intent = "display", annots = undefined) {
+    // 2022年4月22日 陈文磊 渲染新的批注层
+    const [annotations, hasJSActions = false, fieldObjects = null] = annots
+      ? [annots, false, null]
+      : await Promise.all([
+          this.pdfPage.getAnnotations({ intent }),
+          this._hasJSActionsPromise,
+          this._fieldObjectsPromise,
+        ]);
 
-    if (this._cancelled || annotations.length === 0) {
+    console.log(annotations);
+    console.log(this._cancelled);
+
+    if (!annotations) {
       return;
     }
 
     const parameters = {
+      popupElements: this.popupElements,
       viewport: viewport.clone({ dontFlip: true }),
       div: this.div,
+      highlightDiv: this.highlightDiv,
       annotations,
       page: this.pdfPage,
       imageResourcesPath: this.imageResourcesPath,
@@ -114,21 +128,102 @@ class AnnotationLayerBuilder {
       annotationCanvasMap: this._annotationCanvasMap,
     };
 
-    if (this.div) {
-      // If an annotationLayer already exists, refresh its children's
-      // transformation matrices.
-      AnnotationLayer.update(parameters);
-    } else {
-      // Create an annotation layer div and render the annotations
-      // if there is at least one annotation.
-      this.div = document.createElement("div");
-      this.div.className = "annotationLayer";
-      this.pageDiv.append(this.div);
-      parameters.div = this.div;
+    this.highlightDiv = this.highlightDiv ?? document.createElement("div");
+    this.highlightDiv.className = "annotationLayer highlight";
+    this.highlightDiv.innerHTML = "";
+    this.pageDiv.insertBefore(this.highlightDiv, this.pageDiv.children[0]);
 
-      AnnotationLayer.render(parameters);
-      this.l10n.translate(this.div);
-    }
+    parameters.highlightDiv = this.highlightDiv;
+    this.highlightDiv.hidden = false;
+
+    this.div = this.div ?? document.createElement("div");
+    this.div.className = "annotationLayer";
+    this.div.innerHTML = "";
+    this.pageDiv.append(this.div);
+    // this.pageDiv.insertBefore(this.div, this.pageDiv.children[0]);
+    parameters.div = this.div;
+    this.div.hidden = false;
+
+    AnnotationLayer.render(parameters);
+    this.l10n.translate(this.div);
+    // const [annotations, hasJSActions = false, fieldObjects = null] =
+    //   await Promise.all([
+    //     this.pdfPage.getAnnotations({ intent }),
+    //     this._hasJSActionsPromise,
+    //     this._fieldObjectsPromise,
+    //   ]);
+
+    // if (this._cancelled || annotations.length === 0) {
+    //   return;
+    // }
+
+    // const parameters = {
+    //   viewport: viewport.clone({ dontFlip: true }),
+    //   div: this.div,
+    //   annotations,
+    //   page: this.pdfPage,
+    //   imageResourcesPath: this.imageResourcesPath,
+    //   renderForms: this.renderForms,
+    //   linkService: this.linkService,
+    //   downloadManager: this.downloadManager,
+    //   annotationStorage: this.annotationStorage,
+    //   enableScripting: this.enableScripting,
+    //   hasJSActions,
+    //   fieldObjects,
+    //   mouseState: this._mouseState,
+    //   annotationCanvasMap: this._annotationCanvasMap,
+    // };
+
+    // if (this.div) {
+    //   // If an annotationLayer already exists, refresh its children's
+    //   // transformation matrices.
+    //   AnnotationLayer.update(parameters);
+    // } else {
+    //   // Create an annotation layer div and render the annotations
+    //   // if there is at least one annotation.
+    //   this.div = document.createElement("div");
+    //   this.div.className = "annotationLayer";
+    //   this.pageDiv.append(this.div);
+    //   parameters.div = this.div;
+
+    //   AnnotationLayer.render(parameters);
+    //   this.l10n.translate(this.div);
+    // }
+  }
+
+  async update(viewport, intent = "display", annots = undefined) {
+    console.log("Annotationbuilder render update called");
+
+    // 2022年4月22日 陈文磊 渲染新的批注层
+    const [annotations, hasJSActions = false, fieldObjects = null] =
+      annots !== undefined
+        ? [annots, false, null]
+        : await Promise.all([
+            this.pdfPage.getAnnotations({ intent }),
+            this._hasJSActionsPromise,
+            this._fieldObjectsPromise,
+          ]);
+
+    const parameters = {
+      popupElements: this.popupElements,
+      viewport: viewport.clone({ dontFlip: true }),
+      div: this.div,
+      highlightDiv: this.highlightDiv,
+      annotations,
+      page: this.pdfPage,
+      imageResourcesPath: this.imageResourcesPath,
+      renderForms: this.renderForms,
+      linkService: this.linkService,
+      downloadManager: this.downloadManager,
+      annotationStorage: this.annotationStorage,
+      enableScripting: this.enableScripting,
+      hasJSActions,
+      fieldObjects,
+      mouseState: this._mouseState,
+      annotationCanvasMap: this._annotationCanvasMap,
+    };
+
+    AnnotationLayer.update(parameters);
   }
 
   cancel() {

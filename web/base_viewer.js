@@ -1692,7 +1692,9 @@ class BaseViewer {
     hasJSActionsPromise = null,
     mouseState = null,
     fieldObjectsPromise = null,
-    annotationCanvasMap = null
+    annotationCanvasMap = null,
+    // 2023年2月2日 陈文磊 新增以下
+    popupElements
   ) {
     return new AnnotationLayerBuilder({
       pageDiv,
@@ -1711,6 +1713,8 @@ class BaseViewer {
         fieldObjectsPromise || this.pdfDocument?.getFieldObjects(),
       mouseState: mouseState || this._scriptingManager?.mouseState,
       annotationCanvasMap,
+      // 2023年2月2日 陈文磊 新增以下
+      popupElements
     });
   }
 
