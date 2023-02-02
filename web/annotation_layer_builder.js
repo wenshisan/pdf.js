@@ -102,8 +102,8 @@ class AnnotationLayerBuilder {
           this._fieldObjectsPromise,
         ]);
 
-    console.log(annotations);
-    console.log(this._cancelled);
+    // console.log(annotations);
+    // console.log(this._cancelled);
 
     if (!annotations) {
       return;

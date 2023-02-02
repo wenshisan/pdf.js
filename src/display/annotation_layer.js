@@ -178,6 +178,7 @@ class AnnotationElement {
     // 2023年2月2日 陈文磊 以下新增字段
     this.popupElements = parameters.popupElements; // 所有的批注弹窗集合
     this.isHighLightItem = parameters.isHighLightItem;
+    this.linkService = parameters.linkService;
 
     if (isRenderable) {
       this.container = this._createContainer(ignoreBorder);
@@ -1785,6 +1786,16 @@ class PopupElement {
     this.hideWrapper = parameters.hideWrapper || false;
 
     this.pinned = false;
+
+    // 2023年2月2日 陈文磊 新增以下
+    this.data = parameters.data;
+    this.popupElements = parameters.popupElements;
+    this.linkService = parameters.linkService;
+    this.isHighLightItem = parameters.isHighLightItem;
+    this.id =
+      Math.round(parameters.data.rect[0]).toString() +
+      Math.round(parameters.data.rect[2]).toString() +
+      Math.round(parameters.data.rect[3]).toString();
   }
 
   render() {
@@ -1887,6 +1898,42 @@ class PopupElement {
     return wrapper;
   }
 
+  onOpopUpClick() {
+    console.log("popup clicked:");
+
+    // 获取匹配高亮元素
+    const matchedHighlightItem = this.popupElements.find(
+      (v, i) =>
+        v.data.annotID &&
+        v.data.annotID === this.data.annotID &&
+        // v.data.rect[0] == this.data.rect[0] &&
+        // v.data.rect[2] == this.data.rect[2] &&
+        // v.data.rect[3] == this.data.rect[3] &&
+        v.isHighLightItem
+    );
+
+    console.log("matchedHighlightItem: ");
+    console.log(matchedHighlightItem);
+
+    if (matchedHighlightItem) {
+      setTimeout(() => {
+        matchedHighlightItem._hide(true);
+      }, 100);
+    }
+
+    setTimeout(() => {
+      this._hide(true);
+    }, 100);
+
+    setTimeout(() => {
+      if (!this.isHighLightItem && this.linkService) {
+        this.linkService.eventBus?.dispatch("annotClosed", {
+          source: this,
+        });
+      }
+    }, 100);
+  }
+
   /**
    * 批注和批注弹出支持点击后关闭其他弹出
    2022年4月15日 陈文磊
@@ -1903,22 +1950,19 @@ class PopupElement {
       // 获取匹配高亮元素
       const matchedHighlightItem = this.popupElements.find(
         (v, i) =>
-          v.data.annotID &&
-          v.data.annotID === this.data.annotID &&
+          (v.data.id === this.data.id ||
+            (v.data.annotID && v.data.annotID === this.data.annotID)) &&
           // v.data.rect[0] == this.data.rect[0] &&
           // v.data.rect[2] == this.data.rect[2] &&
           // v.data.rect[3] == this.data.rect[3] &&
           v.isHighLightItem
       );
 
-      console.log("matchedHighlightItem: ");
-      console.log(matchedHighlightItem);
-
       if (matchedHighlightItem) {
         matchedHighlightItem._show(true);
       }
 
-      this._show(true);
+      // this._show(true);
     }
   }
 
@@ -1935,8 +1979,8 @@ class PopupElement {
 
     const matchedPopups = popup.popupElements.filter(
       (v, i) =>
-        v.data.annotID &&
-        v.data.annotID === popup.data.annotID &&
+        (v.id === popup.id ||
+          (v.data.annotID && v.data.annotID === popup.data.annotID)) &&
         v.isHighLightItem
     );
 
@@ -2005,13 +2049,16 @@ class PopupElement {
    * @memberof PopupElement
    */
   _show(pin = false) {
+    // 2023年2月2日 陈文磊 打开批注弹窗 调亮底色
     if (pin) {
       this.pinned = true;
+      if (this.isHighLightItem) {
+        this.onHighlightAnnot(this, "0.6");
+      }
     }
-    if (this.hideElement.hidden) {
-      this.hideElement.hidden = false;
-      this.container.style.zIndex += 1;
-    }
+
+    this.hideElement.hidden = false;
+    this.container.style.zIndex += 1;
   }
 
   /**
@@ -2022,8 +2069,12 @@ class PopupElement {
    * @memberof PopupElement
    */
   _hide(unpin = true) {
+    // 2023年2月2日 陈文磊 隐藏批注弹窗 调暗底色
     if (unpin) {
       this.pinned = false;
+      if (this.isHighLightItem) {
+        this.onHighlightAnnot(this, "0.3");
+      }
     }
     if (!this.hideElement.hidden && !this.pinned) {
       this.hideElement.hidden = true;
@@ -2574,7 +2625,7 @@ class AnnotationLayer {
     // 2023年2月2日 陈文磊 批注展示层
     const highlightDiv = parameters.highlightDiv;
     this.#setDimensions(div, viewport);
-
+    this.#setDimensions(highlightDiv, viewport);
     const sortedAnnotations = [],
       popupAnnotations = [];
     // Ensure that Popup annotations are handled last, since they're dependant
@@ -2652,7 +2703,7 @@ class AnnotationLayer {
         }
         if (Array.isArray(rendered)) {
           for (const renderedElement of rendered) {
-            div.app(renderedElement);
+            div.append(renderedElement);
           }
           // 2023年2月2日 陈文磊 高亮层增加批注对象
           for (const renderedElement of renderedHiglight) {

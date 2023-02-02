@@ -196,12 +196,12 @@ class PDFPageView {
   }
 
   /**
-   * @private
+   * 2023年2月2日 陈文磊 改为public 增加annots传参
    */
-  async _renderAnnotationLayer() {
+  async _renderAnnotationLayer(annots = undefined) {
     let error = null;
     try {
-      await this.annotationLayer.render(this.viewport, "display");
+      await this.annotationLayer.render(this.viewport, "display", annots);
     } catch (ex) {
       error = ex;
     } finally {

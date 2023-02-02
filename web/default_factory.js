@@ -89,7 +89,7 @@ class DefaultAnnotationLayerFactory {
       mouseState,
       annotationCanvasMap,
       // 2023年2月2日 陈文磊 新增以下
-      popupElements
+      popupElements,
     });
   }
 }
