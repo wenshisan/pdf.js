@@ -161,6 +161,8 @@ class PDFPageView {
     // 2022年5月10日 陈文磊 每次调用renderAnnotEvent时刷新annots实例
     this.annots = undefined;
     this.popupElements = [];
+    // 渲染批注层
+    this.renderAnnotationLayer = this._renderAnnotationLayer;
 
     const div = document.createElement("div");
     div.className = "page";
@@ -196,7 +198,7 @@ class PDFPageView {
   }
 
   /**
-   * 2023年2月2日 陈文磊 改为public 增加annots传参
+   * @private
    */
   async _renderAnnotationLayer(annots = undefined) {
     let error = null;

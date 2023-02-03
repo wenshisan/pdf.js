@@ -296,7 +296,7 @@ if (
 ) {
   defaultOptions.defaultUrl = {
     /** @type {string} */
-    value: "xs.pdf",
+    value: "hh2023.pdf",
     kind: OptionKind.VIEWER,
   };
   defaultOptions.disablePreferences = {
