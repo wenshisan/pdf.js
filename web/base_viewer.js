@@ -1694,7 +1694,8 @@ class BaseViewer {
     fieldObjectsPromise = null,
     annotationCanvasMap = null,
     // 2023年2月2日 陈文磊 新增以下
-    popupElements
+    popupElements,
+    annots
   ) {
     return new AnnotationLayerBuilder({
       pageDiv,
@@ -1714,7 +1715,8 @@ class BaseViewer {
       mouseState: mouseState || this._scriptingManager?.mouseState,
       annotationCanvasMap,
       // 2023年2月2日 陈文磊 新增以下
-      popupElements
+      popupElements,
+      annots,
     });
   }
 

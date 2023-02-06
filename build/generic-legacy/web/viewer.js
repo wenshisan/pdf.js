@@ -246,7 +246,7 @@ var defaultOptions = {
 };
 {
   defaultOptions.defaultUrl = {
-    value: "xs.pdf",
+    value: "hh2023.pdf",
     kind: OptionKind.VIEWER
   };
   defaultOptions.disablePreferences = {
@@ -14599,7 +14599,7 @@ var BaseViewer = /*#__PURE__*/function () {
       throw new Error("Cannot initialize BaseViewer.");
     }
 
-    var viewerVersion = '2.15.272';
+    var viewerVersion = '2.15.273';
 
     if (_pdfjsLib.version !== viewerVersion) {
       throw new Error("The API version \"".concat(_pdfjsLib.version, "\" does not match the Viewer version \"").concat(viewerVersion, "\"."));
@@ -15803,6 +15803,7 @@ var BaseViewer = /*#__PURE__*/function () {
       var fieldObjectsPromise = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : null;
       var annotationCanvasMap = arguments.length > 10 && arguments[10] !== undefined ? arguments[10] : null;
       var popupElements = arguments.length > 11 ? arguments[11] : undefined;
+      var annots = arguments.length > 12 ? arguments[12] : undefined;
       return new _annotation_layer_builder.AnnotationLayerBuilder({
         pageDiv: pageDiv,
         pdfPage: pdfPage,
@@ -15817,7 +15818,8 @@ var BaseViewer = /*#__PURE__*/function () {
         fieldObjectsPromise: fieldObjectsPromise || ((_this$pdfDocument3 = this.pdfDocument) === null || _this$pdfDocument3 === void 0 ? void 0 : _this$pdfDocument3.getFieldObjects()),
         mouseState: mouseState || ((_this$_scriptingManag = this._scriptingManager) === null || _this$_scriptingManag === void 0 ? void 0 : _this$_scriptingManag.mouseState),
         annotationCanvasMap: annotationCanvasMap,
-        popupElements: popupElements
+        popupElements: popupElements,
+        annots: annots
       });
     }
   }, {
@@ -17070,7 +17072,8 @@ var AnnotationLayerBuilder = /*#__PURE__*/function () {
         mouseState = _ref$mouseState === void 0 ? null : _ref$mouseState,
         _ref$annotationCanvas = _ref.annotationCanvasMap,
         annotationCanvasMap = _ref$annotationCanvas === void 0 ? null : _ref$annotationCanvas,
-        popupElements = _ref.popupElements;
+        popupElements = _ref.popupElements,
+        annots = _ref.annots;
 
     _classCallCheck(this, AnnotationLayerBuilder);
 
@@ -17091,6 +17094,7 @@ var AnnotationLayerBuilder = /*#__PURE__*/function () {
     this._cancelled = false;
     this.popupElements = popupElements;
     this.highlightDiv = null;
+    this.annots = annots;
   }
 
   _createClass(AnnotationLayerBuilder, [{
@@ -17203,93 +17207,6 @@ var AnnotationLayerBuilder = /*#__PURE__*/function () {
       }
 
       return render;
-    }()
-  }, {
-    key: "update",
-    value: function () {
-      var _update = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(viewport) {
-        var intent,
-            annots,
-            _ref4,
-            _ref5,
-            annotations,
-            _ref5$,
-            hasJSActions,
-            _ref5$2,
-            fieldObjects,
-            parameters,
-            _args2 = arguments;
-
-        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                intent = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : "display";
-                annots = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : undefined;
-                console.log("Annotationbuilder render update called");
-
-                if (!(annots !== undefined)) {
-                  _context2.next = 7;
-                  break;
-                }
-
-                _context2.t0 = [annots, false, null];
-                _context2.next = 10;
-                break;
-
-              case 7:
-                _context2.next = 9;
-                return Promise.all([this.pdfPage.getAnnotations({
-                  intent: intent
-                }), this._hasJSActionsPromise, this._fieldObjectsPromise]);
-
-              case 9:
-                _context2.t0 = _context2.sent;
-
-              case 10:
-                _ref4 = _context2.t0;
-                _ref5 = _slicedToArray(_ref4, 3);
-                annotations = _ref5[0];
-                _ref5$ = _ref5[1];
-                hasJSActions = _ref5$ === void 0 ? false : _ref5$;
-                _ref5$2 = _ref5[2];
-                fieldObjects = _ref5$2 === void 0 ? null : _ref5$2;
-                parameters = {
-                  popupElements: this.popupElements,
-                  viewport: viewport.clone({
-                    dontFlip: true
-                  }),
-                  div: this.div,
-                  highlightDiv: this.highlightDiv,
-                  annotations: annotations,
-                  page: this.pdfPage,
-                  imageResourcesPath: this.imageResourcesPath,
-                  renderForms: this.renderForms,
-                  linkService: this.linkService,
-                  downloadManager: this.downloadManager,
-                  annotationStorage: this.annotationStorage,
-                  enableScripting: this.enableScripting,
-                  hasJSActions: hasJSActions,
-                  fieldObjects: fieldObjects,
-                  mouseState: this._mouseState,
-                  annotationCanvasMap: this._annotationCanvasMap
-                };
-
-                _pdfjsLib.AnnotationLayer.update(parameters);
-
-              case 19:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2, this);
-      }));
-
-      function update(_x2) {
-        return _update.apply(this, arguments);
-      }
-
-      return update;
     }()
   }, {
     key: "cancel",
@@ -17423,7 +17340,7 @@ var PDFPageView = /*#__PURE__*/function () {
     this.zoomLayer = null;
     this.xfaLayer = null;
     this.structTreeLayer = null;
-    this.annots = undefined;
+    this.annots = null;
     this.popupElements = [];
     this.renderAnnotationLayer = this._renderAnnotationLayer;
     var div = document.createElement("div");
@@ -17474,35 +17391,40 @@ var PDFPageView = /*#__PURE__*/function () {
             switch (_context.prev = _context.next) {
               case 0:
                 annots = _args.length > 0 && _args[0] !== undefined ? _args[0] : undefined;
-                error = null;
-                _context.prev = 2;
-                _context.next = 5;
-                return this.annotationLayer.render(this.viewport, "display", annots);
 
-              case 5:
-                _context.next = 10;
+                if (annots) {
+                  this.annots = annots;
+                }
+
+                error = null;
+                _context.prev = 3;
+                _context.next = 6;
+                return this.annotationLayer.render(this.viewport, "display", this.annots);
+
+              case 6:
+                _context.next = 11;
                 break;
 
-              case 7:
-                _context.prev = 7;
-                _context.t0 = _context["catch"](2);
+              case 8:
+                _context.prev = 8;
+                _context.t0 = _context["catch"](3);
                 error = _context.t0;
 
-              case 10:
-                _context.prev = 10;
+              case 11:
+                _context.prev = 11;
                 this.eventBus.dispatch("annotationlayerrendered", {
                   source: this,
                   pageNumber: this.id,
                   error: error
                 });
-                return _context.finish(10);
+                return _context.finish(11);
 
-              case 13:
+              case 14:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[2, 7, 10, 13]]);
+        }, _callee, this, [[3, 8, 11, 14]]);
       }));
 
       function _renderAnnotationLayer() {
@@ -18077,7 +17999,7 @@ var PDFPageView = /*#__PURE__*/function () {
 
       if (_classPrivateFieldGet(this, _annotationMode) !== _pdfjsLib.AnnotationMode.DISABLE && this.annotationLayerFactory) {
         this._annotationCanvasMap || (this._annotationCanvasMap = new Map());
-        this.annotationLayer || (this.annotationLayer = this.annotationLayerFactory.createAnnotationLayerBuilder(div, pdfPage, null, this.imageResourcesPath, _classPrivateFieldGet(this, _annotationMode) === _pdfjsLib.AnnotationMode.ENABLE_FORMS, this.l10n, null, null, null, null, this._annotationCanvasMap, this.popupElements));
+        this.annotationLayer || (this.annotationLayer = this.annotationLayerFactory.createAnnotationLayerBuilder(div, pdfPage, null, this.imageResourcesPath, _classPrivateFieldGet(this, _annotationMode) === _pdfjsLib.AnnotationMode.ENABLE_FORMS, this.l10n, null, null, null, null, this._annotationCanvasMap, this.popupElements, this.annots));
       }
 
       if ((_this$xfaLayer2 = this.xfaLayer) !== null && _this$xfaLayer2 !== void 0 && _this$xfaLayer2.div) {
@@ -22520,8 +22442,8 @@ var _app = __webpack_require__(2);
 
 var _document$blockUnbloc, _document;
 
-var pdfjsVersion = '2.15.272';
-var pdfjsBuild = '2d709a8be';
+var pdfjsVersion = '2.15.273';
+var pdfjsBuild = '4f4a33946';
 window.PDFViewerApplication = _app.PDFViewerApplication;
 window.PDFViewerApplicationOptions = _app_options.AppOptions;
 ;

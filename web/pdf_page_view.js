@@ -159,7 +159,7 @@ class PDFPageView {
     this.structTreeLayer = null;
 
     // 2022年5月10日 陈文磊 每次调用renderAnnotEvent时刷新annots实例
-    this.annots = undefined;
+    this.annots = null;
     this.popupElements = [];
     // 渲染批注层
     this.renderAnnotationLayer = this._renderAnnotationLayer;
@@ -201,9 +201,13 @@ class PDFPageView {
    * @private
    */
   async _renderAnnotationLayer(annots = undefined) {
+    if (annots) {
+      this.annots = annots;
+    }
+
     let error = null;
     try {
-      await this.annotationLayer.render(this.viewport, "display", annots);
+      await this.annotationLayer.render(this.viewport, "display", this.annots);
     } catch (ex) {
       error = ex;
     } finally {
@@ -681,7 +685,8 @@ class PDFPageView {
           /* fieldObjectsPromise = */ null,
           /* annotationCanvasMap */ this._annotationCanvasMap,
           // 2023年2月2日 陈文磊 新增以下
-          this.popupElements
+          this.popupElements,
+          this.annots
         );
     }
 

@@ -4930,7 +4930,7 @@ function _fetchDocument2() {
             _context7.next = 5;
             return worker.messageHandler.sendWithPromise("GetDocRequest", {
               docId: docId,
-              apiVersion: '2.15.272',
+              apiVersion: '2.15.273',
               source: {
                 data: source.data,
                 url: source.url,
@@ -7797,9 +7797,9 @@ var _canvasInUse = {
   writable: true,
   value: new WeakSet()
 };
-var version = '2.15.272';
+var version = '2.15.273';
 exports.version = version;
-var build = '2d709a8be';
+var build = '4f4a33946';
 exports.build = build;
 
 /***/ }),
@@ -21979,14 +21979,6 @@ var PopupElement = /*#__PURE__*/function () {
       var title = document.createElement("h1");
       title.dir = this.titleObj.dir;
       title.textContent = this.titleObj.str;
-
-      if (color) {
-        var r = BACKGROUND_ENLIGHT * (255 - color[0]) + color[0];
-        var g = BACKGROUND_ENLIGHT * (255 - color[1]) + color[1];
-        var b = BACKGROUND_ENLIGHT * (255 - color[2]) + color[2];
-        title.style.color = _util.Util.makeHexColor(r | 0, g | 0, b | 0);
-      }
-
       popup.append(title);
 
       var dateObject = _display_utils.PDFDateString.toDateObject(this.modificationDate);
@@ -22013,6 +22005,17 @@ var PopupElement = /*#__PURE__*/function () {
         popup.lastChild.className = "richText popupContent";
       } else {
         var contents = this._formatContents(this.contentsObj);
+
+        if (color) {
+          var r = BACKGROUND_ENLIGHT * (255 - color[0]) + color[0];
+          var g = BACKGROUND_ENLIGHT * (255 - color[1]) + color[1];
+          var b = BACKGROUND_ENLIGHT * (255 - color[2]) + color[2];
+
+          var titleAndLineColor = _util.Util.makeHexColor(r | 0, g | 0, b | 0);
+
+          contents.style.borderTopColor = titleAndLineColor;
+          title.style.color = titleAndLineColor;
+        }
 
         popup.append(contents);
       }
@@ -22065,12 +22068,9 @@ var PopupElement = /*#__PURE__*/function () {
     value: function onOpopUpClick() {
       var _this13 = this;
 
-      console.log("popup clicked:");
       var matchedHighlightItem = this.popupElements.find(function (v, i) {
         return v.data.annotID && v.data.annotID === _this13.data.annotID && v.isHighLightItem;
       });
-      console.log("matchedHighlightItem: ");
-      console.log(matchedHighlightItem);
 
       if (matchedHighlightItem) {
         setTimeout(function () {
@@ -22095,8 +22095,6 @@ var PopupElement = /*#__PURE__*/function () {
     key: "onAnnotClick",
     value: function onAnnotClick() {
       var _this14 = this;
-
-      console.log("onAnnot clicked:");
 
       if (!this.isHighLightItem && this.linkService) {
         var _this$linkService$eve;
@@ -22126,13 +22124,6 @@ var PopupElement = /*#__PURE__*/function () {
       });
 
       if (color && matchedPopups.length > 0) {
-        console.log("onHighlightAnnot: ");
-        console.log(popup);
-
-        if (popup.contentsObj.str.includes("精力允")) {
-          console.log(matchedPopups);
-        }
-
         var r = BACKGROUND_ENLIGHT * (255 - color[0]) + color[0];
         var g = BACKGROUND_ENLIGHT * (255 - color[1]) + color[1];
         var b = BACKGROUND_ENLIGHT * (255 - color[2]) + color[2];
@@ -28575,8 +28566,8 @@ var _svg = __w_pdfjs_require__(156);
 
 var _xfa_layer = __w_pdfjs_require__(154);
 
-var pdfjsVersion = '2.15.272';
-var pdfjsBuild = '2d709a8be';
+var pdfjsVersion = '2.15.273';
+var pdfjsBuild = '4f4a33946';
 {
   if (_is_node.isNodeJS) {
     var _require = __w_pdfjs_require__(157),

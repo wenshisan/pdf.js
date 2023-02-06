@@ -63,6 +63,7 @@ class AnnotationLayerBuilder {
     annotationCanvasMap = null,
     // 2023年2月2日 陈文磊 新增以下
     popupElements,
+    annots,
   }) {
     this.pageDiv = pageDiv;
     this.pdfPage = pdfPage;
@@ -84,6 +85,7 @@ class AnnotationLayerBuilder {
     // 2023年2月2日 陈文磊 新增以下
     this.popupElements = popupElements;
     this.highlightDiv = null;
+    this.annots = annots;
   }
 
   /**
@@ -191,40 +193,40 @@ class AnnotationLayerBuilder {
     // }
   }
 
-  async update(viewport, intent = "display", annots = undefined) {
-    console.log("Annotationbuilder render update called");
+  // async update(viewport, intent = "display", annots = undefined) {
+  //   console.log("Annotationbuilder render update called");
 
-    // 2022年4月22日 陈文磊 渲染新的批注层
-    const [annotations, hasJSActions = false, fieldObjects = null] =
-      annots !== undefined
-        ? [annots, false, null]
-        : await Promise.all([
-            this.pdfPage.getAnnotations({ intent }),
-            this._hasJSActionsPromise,
-            this._fieldObjectsPromise,
-          ]);
+  //   // 2022年4月22日 陈文磊 渲染新的批注层
+  //   const [annotations, hasJSActions = false, fieldObjects = null] =
+  //     annots !== undefined
+  //       ? [annots, false, null]
+  //       : await Promise.all([
+  //           this.pdfPage.getAnnotations({ intent }),
+  //           this._hasJSActionsPromise,
+  //           this._fieldObjectsPromise,
+  //         ]);
 
-    const parameters = {
-      popupElements: this.popupElements,
-      viewport: viewport.clone({ dontFlip: true }),
-      div: this.div,
-      highlightDiv: this.highlightDiv,
-      annotations,
-      page: this.pdfPage,
-      imageResourcesPath: this.imageResourcesPath,
-      renderForms: this.renderForms,
-      linkService: this.linkService,
-      downloadManager: this.downloadManager,
-      annotationStorage: this.annotationStorage,
-      enableScripting: this.enableScripting,
-      hasJSActions,
-      fieldObjects,
-      mouseState: this._mouseState,
-      annotationCanvasMap: this._annotationCanvasMap,
-    };
+  //   const parameters = {
+  //     popupElements: this.popupElements,
+  //     viewport: viewport.clone({ dontFlip: true }),
+  //     div: this.div,
+  //     highlightDiv: this.highlightDiv,
+  //     annotations,
+  //     page: this.pdfPage,
+  //     imageResourcesPath: this.imageResourcesPath,
+  //     renderForms: this.renderForms,
+  //     linkService: this.linkService,
+  //     downloadManager: this.downloadManager,
+  //     annotationStorage: this.annotationStorage,
+  //     enableScripting: this.enableScripting,
+  //     hasJSActions,
+  //     fieldObjects,
+  //     mouseState: this._mouseState,
+  //     annotationCanvasMap: this._annotationCanvasMap,
+  //   };
 
-    AnnotationLayer.update(parameters);
-  }
+  //   AnnotationLayer.update(parameters);
+  // }
 
   cancel() {
     this._cancelled = true;

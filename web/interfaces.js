@@ -206,7 +206,9 @@ class IPDFAnnotationLayerFactory {
     hasJSActionsPromise = null,
     mouseState = null,
     fieldObjectsPromise = null,
-    annotationCanvasMap = null
+    annotationCanvasMap = null,
+    popupElements,
+    annots
   ) {}
 }
 

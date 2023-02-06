@@ -1820,14 +1820,13 @@ class PopupElement {
     const title = document.createElement("h1");
     title.dir = this.titleObj.dir;
     title.textContent = this.titleObj.str;
-    if (color) {
-      // Enlighten the color.
-      const r = BACKGROUND_ENLIGHT * (255 - color[0]) + color[0];
-      const g = BACKGROUND_ENLIGHT * (255 - color[1]) + color[1];
-      const b = BACKGROUND_ENLIGHT * (255 - color[2]) + color[2];
-      // popup.style.backgroundColor = Util.makeHexColor(r | 0, g | 0, b | 0);
-      title.style.color = Util.makeHexColor(r | 0, g | 0, b | 0);
-    }
+    // if (color) {
+    //   // Enlighten the color.
+    //   const r = BACKGROUND_ENLIGHT * (255 - color[0]) + color[0];
+    //   const g = BACKGROUND_ENLIGHT * (255 - color[1]) + color[1];
+    //   const b = BACKGROUND_ENLIGHT * (255 - color[2]) + color[2];
+    //   popup.style.backgroundColor = Util.makeHexColor(r | 0, g | 0, b | 0);
+    // }
     popup.append(title);
 
     // The modification date is shown in the popup instead of the creation
@@ -1858,6 +1857,17 @@ class PopupElement {
       popup.lastChild.className = "richText popupContent";
     } else {
       const contents = this._formatContents(this.contentsObj);
+      if (color) {
+        // Enlighten the color.
+        const r = BACKGROUND_ENLIGHT * (255 - color[0]) + color[0];
+        const g = BACKGROUND_ENLIGHT * (255 - color[1]) + color[1];
+        const b = BACKGROUND_ENLIGHT * (255 - color[2]) + color[2];
+        // popup.style.backgroundColor = Util.makeHexColor(r | 0, g | 0, b | 0);
+        // 2023年2月6日 陈文磊 分割线颜色改为和tiltle同色
+        const titleAndLineColor = Util.makeHexColor(r | 0, g | 0, b | 0);
+        contents.style.borderTopColor = titleAndLineColor;
+        title.style.color = titleAndLineColor;
+      }
       popup.append(contents);
     }
 
@@ -1899,7 +1909,7 @@ class PopupElement {
   }
 
   onOpopUpClick() {
-    console.log("popup clicked:");
+    // console.log("popup clicked:");
 
     // 获取匹配高亮元素
     const matchedHighlightItem = this.popupElements.find(
@@ -1912,8 +1922,8 @@ class PopupElement {
         v.isHighLightItem
     );
 
-    console.log("matchedHighlightItem: ");
-    console.log(matchedHighlightItem);
+    // console.log("matchedHighlightItem: ");
+    // console.log(matchedHighlightItem);
 
     if (matchedHighlightItem) {
       setTimeout(() => {
@@ -1939,7 +1949,7 @@ class PopupElement {
    2022年4月15日 陈文磊
    */
   onAnnotClick() {
-    console.log("onAnnot clicked:");
+    // console.log("onAnnot clicked:");
     if (!this.isHighLightItem && this.linkService) {
       this.linkService.eventBus?.dispatch("highlightAnnotClicked", {
         source: this,
@@ -1985,11 +1995,11 @@ class PopupElement {
     );
 
     if (color && matchedPopups.length > 0) {
-      console.log("onHighlightAnnot: ");
-      console.log(popup);
-      if (popup.contentsObj.str.includes("精力允")) {
-        console.log(matchedPopups);
-      }
+      // console.log("onHighlightAnnot: ");
+      // console.log(popup);
+      // if (popup.contentsObj.str.includes("精力允")) {
+      //   console.log(matchedPopups);
+      // }
       // Enlighten the color.
       const r = BACKGROUND_ENLIGHT * (255 - color[0]) + color[0];
       const g = BACKGROUND_ENLIGHT * (255 - color[1]) + color[1];
