@@ -14599,7 +14599,7 @@ var BaseViewer = /*#__PURE__*/function () {
       throw new Error("Cannot initialize BaseViewer.");
     }
 
-    var viewerVersion = '2.15.273';
+    var viewerVersion = '2.15.274';
 
     if (_pdfjsLib.version !== viewerVersion) {
       throw new Error("The API version \"".concat(_pdfjsLib.version, "\" does not match the Viewer version \"").concat(viewerVersion, "\"."));
@@ -17189,12 +17189,13 @@ var AnnotationLayerBuilder = /*#__PURE__*/function () {
                 this.pageDiv.append(this.div);
                 parameters.div = this.div;
                 this.div.hidden = false;
+                parameters.popupElements.length = 0;
 
                 _pdfjsLib.AnnotationLayer.render(parameters);
 
                 this.l10n.translate(this.div);
 
-              case 33:
+              case 34:
               case "end":
                 return _context.stop();
             }
@@ -17343,6 +17344,7 @@ var PDFPageView = /*#__PURE__*/function () {
     this.annots = null;
     this.popupElements = [];
     this.renderAnnotationLayer = this._renderAnnotationLayer;
+    this.openAnnot = this._openAnnot;
     var div = document.createElement("div");
     div.className = "page";
     div.style.width = Math.floor(this.viewport.width) + "px";
@@ -17359,6 +17361,14 @@ var PDFPageView = /*#__PURE__*/function () {
   }
 
   _createClass(PDFPageView, [{
+    key: "_openAnnot",
+    value: function _openAnnot(annotID) {
+      var matchedHighlightItem = this.popupElements.find(function (v) {
+        return v.data.annotID && v.data.annotID === annotID && !v.isHighLightItem;
+      });
+      matchedHighlightItem.trigger[0].click();
+    }
+  }, {
     key: "setPdfPage",
     value: function setPdfPage(pdfPage) {
       this.pdfPage = pdfPage;
@@ -22442,8 +22452,8 @@ var _app = __webpack_require__(2);
 
 var _document$blockUnbloc, _document;
 
-var pdfjsVersion = '2.15.273';
-var pdfjsBuild = '4f4a33946';
+var pdfjsVersion = '2.15.274';
+var pdfjsBuild = '7a29cb640';
 window.PDFViewerApplication = _app.PDFViewerApplication;
 window.PDFViewerApplicationOptions = _app_options.AppOptions;
 ;

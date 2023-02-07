@@ -4930,7 +4930,7 @@ function _fetchDocument2() {
             _context7.next = 5;
             return worker.messageHandler.sendWithPromise("GetDocRequest", {
               docId: docId,
-              apiVersion: '2.15.273',
+              apiVersion: '2.15.274',
               source: {
                 data: source.data,
                 url: source.url,
@@ -7797,9 +7797,9 @@ var _canvasInUse = {
   writable: true,
   value: new WeakSet()
 };
-var version = '2.15.273';
+var version = '2.15.274';
 exports.version = version;
-var build = '4f4a33946';
+var build = '7a29cb640';
 exports.build = build;
 
 /***/ }),
@@ -22055,46 +22055,14 @@ var PopupElement = /*#__PURE__*/function () {
         _iterator18.f();
       }
 
-      if (!this.isHighLightItem) {
-        popup.addEventListener("click", this.onOpopUpClick.bind(this));
-      }
-
       popup.addEventListener("click", this._hide.bind(this, true));
       wrapper.append(popup);
       return wrapper;
     }
   }, {
-    key: "onOpopUpClick",
-    value: function onOpopUpClick() {
-      var _this13 = this;
-
-      var matchedHighlightItem = this.popupElements.find(function (v, i) {
-        return v.data.annotID && v.data.annotID === _this13.data.annotID && v.isHighLightItem;
-      });
-
-      if (matchedHighlightItem) {
-        setTimeout(function () {
-          matchedHighlightItem._hide(true);
-        }, 100);
-      }
-
-      setTimeout(function () {
-        _this13._hide(true);
-      }, 100);
-      setTimeout(function () {
-        if (!_this13.isHighLightItem && _this13.linkService) {
-          var _this13$linkService$e;
-
-          (_this13$linkService$e = _this13.linkService.eventBus) === null || _this13$linkService$e === void 0 ? void 0 : _this13$linkService$e.dispatch("annotClosed", {
-            source: _this13
-          });
-        }
-      }, 100);
-    }
-  }, {
     key: "onAnnotClick",
     value: function onAnnotClick() {
-      var _this14 = this;
+      var _this13 = this;
 
       if (!this.isHighLightItem && this.linkService) {
         var _this$linkService$eve;
@@ -22102,11 +22070,13 @@ var PopupElement = /*#__PURE__*/function () {
         (_this$linkService$eve = this.linkService.eventBus) === null || _this$linkService$eve === void 0 ? void 0 : _this$linkService$eve.dispatch("highlightAnnotClicked", {
           source: this
         });
-        this.popupElements.forEach(function (x) {
+        this.popupElements.filter(function (x) {
+          return x.pinned;
+        }).forEach(function (x) {
           return x._hide(true);
         });
         var matchedHighlightItem = this.popupElements.find(function (v, i) {
-          return (v.data.id === _this14.data.id || v.data.annotID && v.data.annotID === _this14.data.annotID) && v.isHighLightItem;
+          return (v.data.id === _this13.data.id || v.data.annotID && v.data.annotID === _this13.data.annotID) && v.isHighLightItem;
         });
 
         if (matchedHighlightItem) {
@@ -22400,18 +22370,18 @@ var PolylineAnnotationElement = /*#__PURE__*/function (_AnnotationElement9) {
   function PolylineAnnotationElement(parameters) {
     var _parameters$data$titl7, _parameters$data$cont7, _parameters$data$rich7;
 
-    var _this15;
+    var _this14;
 
     _classCallCheck(this, PolylineAnnotationElement);
 
     var isRenderable = !!(parameters.data.hasPopup || (_parameters$data$titl7 = parameters.data.titleObj) !== null && _parameters$data$titl7 !== void 0 && _parameters$data$titl7.str || (_parameters$data$cont7 = parameters.data.contentsObj) !== null && _parameters$data$cont7 !== void 0 && _parameters$data$cont7.str || (_parameters$data$rich7 = parameters.data.richText) !== null && _parameters$data$rich7 !== void 0 && _parameters$data$rich7.str);
-    _this15 = _super14.call(this, parameters, {
+    _this14 = _super14.call(this, parameters, {
       isRenderable: isRenderable,
       ignoreBorder: true
     });
-    _this15.containerClassName = "polylineAnnotation";
-    _this15.svgElementName = "svg:polyline";
-    return _this15;
+    _this14.containerClassName = "polylineAnnotation";
+    _this14.svgElementName = "svg:polyline";
+    return _this14;
   }
 
   _createClass(PolylineAnnotationElement, [{
@@ -22467,14 +22437,14 @@ var PolygonAnnotationElement = /*#__PURE__*/function (_PolylineAnnotationEl) {
   var _super15 = _createSuper(PolygonAnnotationElement);
 
   function PolygonAnnotationElement(parameters) {
-    var _this16;
+    var _this15;
 
     _classCallCheck(this, PolygonAnnotationElement);
 
-    _this16 = _super15.call(this, parameters);
-    _this16.containerClassName = "polygonAnnotation";
-    _this16.svgElementName = "svg:polygon";
-    return _this16;
+    _this15 = _super15.call(this, parameters);
+    _this15.containerClassName = "polygonAnnotation";
+    _this15.svgElementName = "svg:polygon";
+    return _this15;
   }
 
   return _createClass(PolygonAnnotationElement);
@@ -22521,18 +22491,18 @@ var InkAnnotationElement = /*#__PURE__*/function (_AnnotationElement11) {
   function InkAnnotationElement(parameters) {
     var _parameters$data$titl9, _parameters$data$cont9, _parameters$data$rich9;
 
-    var _this17;
+    var _this16;
 
     _classCallCheck(this, InkAnnotationElement);
 
     var isRenderable = !!(parameters.data.hasPopup || (_parameters$data$titl9 = parameters.data.titleObj) !== null && _parameters$data$titl9 !== void 0 && _parameters$data$titl9.str || (_parameters$data$cont9 = parameters.data.contentsObj) !== null && _parameters$data$cont9 !== void 0 && _parameters$data$cont9.str || (_parameters$data$rich9 = parameters.data.richText) !== null && _parameters$data$rich9 !== void 0 && _parameters$data$rich9.str);
-    _this17 = _super17.call(this, parameters, {
+    _this16 = _super17.call(this, parameters, {
       isRenderable: isRenderable,
       ignoreBorder: true
     });
-    _this17.containerClassName = "inkAnnotation";
-    _this17.svgElementName = "svg:polyline";
-    return _this17;
+    _this16.containerClassName = "inkAnnotation";
+    _this16.svgElementName = "svg:polyline";
+    return _this16;
   }
 
   _createClass(InkAnnotationElement, [{
@@ -22783,26 +22753,26 @@ var FileAttachmentAnnotationElement = /*#__PURE__*/function (_AnnotationElement1
   var _super23 = _createSuper(FileAttachmentAnnotationElement);
 
   function FileAttachmentAnnotationElement(parameters) {
-    var _this18$linkService$e;
+    var _this17$linkService$e;
 
-    var _this18;
+    var _this17;
 
     _classCallCheck(this, FileAttachmentAnnotationElement);
 
-    _this18 = _super23.call(this, parameters, {
+    _this17 = _super23.call(this, parameters, {
       isRenderable: true
     });
-    var _this18$data$file = _this18.data.file,
-        filename = _this18$data$file.filename,
-        content = _this18$data$file.content;
-    _this18.filename = (0, _display_utils.getFilenameFromUrl)(filename);
-    _this18.content = content;
-    (_this18$linkService$e = _this18.linkService.eventBus) === null || _this18$linkService$e === void 0 ? void 0 : _this18$linkService$e.dispatch("fileattachmentannotation", {
-      source: _assertThisInitialized(_this18),
+    var _this17$data$file = _this17.data.file,
+        filename = _this17$data$file.filename,
+        content = _this17$data$file.content;
+    _this17.filename = (0, _display_utils.getFilenameFromUrl)(filename);
+    _this17.content = content;
+    (_this17$linkService$e = _this17.linkService.eventBus) === null || _this17$linkService$e === void 0 ? void 0 : _this17$linkService$e.dispatch("fileattachmentannotation", {
+      source: _assertThisInitialized(_this17),
       filename: filename,
       content: content
     });
-    return _this18;
+    return _this17;
   }
 
   _createClass(FileAttachmentAnnotationElement, [{
@@ -28566,8 +28536,8 @@ var _svg = __w_pdfjs_require__(156);
 
 var _xfa_layer = __w_pdfjs_require__(154);
 
-var pdfjsVersion = '2.15.273';
-var pdfjsBuild = '4f4a33946';
+var pdfjsVersion = '2.15.274';
+var pdfjsBuild = '7a29cb640';
 {
   if (_is_node.isNodeJS) {
     var _require = __w_pdfjs_require__(157),

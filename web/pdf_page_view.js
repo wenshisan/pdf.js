@@ -163,6 +163,7 @@ class PDFPageView {
     this.popupElements = [];
     // 渲染批注层
     this.renderAnnotationLayer = this._renderAnnotationLayer;
+    this.openAnnot = this._openAnnot;
 
     const div = document.createElement("div");
     div.className = "page";
@@ -176,6 +177,17 @@ class PDFPageView {
     this.div = div;
 
     container?.append(div);
+  }
+
+  /**
+   * 2023年2月6日 陈文磊 从外部打开批注
+   
+  */
+  _openAnnot(annotID) {
+    const matchedHighlightItem = this.popupElements.find(
+      v => v.data.annotID && v.data.annotID === annotID && !v.isHighLightItem
+    );
+    matchedHighlightItem.trigger[0].click();
   }
 
   setPdfPage(pdfPage) {

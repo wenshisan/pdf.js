@@ -1899,50 +1899,50 @@ class PopupElement {
       // element.addEventListener("mouseover", this._show.bind(this, false));
       // element.addEventListener("mouseout", this._hide.bind(this, false));
     }
-    if (!this.isHighLightItem) {
-      popup.addEventListener("click", this.onOpopUpClick.bind(this));
-    }
+    // if (!this.isHighLightItem) {
+    //   popup.addEventListener("click", this.onOpopUpClick.bind(this));
+    // }
     popup.addEventListener("click", this._hide.bind(this, true));
 
     wrapper.append(popup);
     return wrapper;
   }
 
-  onOpopUpClick() {
-    // console.log("popup clicked:");
+  // onOpopUpClick() {
+  //   // console.log("popup clicked:");
 
-    // 获取匹配高亮元素
-    const matchedHighlightItem = this.popupElements.find(
-      (v, i) =>
-        v.data.annotID &&
-        v.data.annotID === this.data.annotID &&
-        // v.data.rect[0] == this.data.rect[0] &&
-        // v.data.rect[2] == this.data.rect[2] &&
-        // v.data.rect[3] == this.data.rect[3] &&
-        v.isHighLightItem
-    );
+  //   // 获取匹配高亮元素
+  //   const matchedHighlightItem = this.popupElements.find(
+  //     (v, i) =>
+  //       (v.data.id === this.data.id ||
+  //         (v.data.annotID && v.data.annotID === this.data.annotID)) &&
+  //       // v.data.rect[0] == this.data.rect[0] &&
+  //       // v.data.rect[2] == this.data.rect[2] &&
+  //       // v.data.rect[3] == this.data.rect[3] &&
+  //       v.isHighLightItem
+  //   );
 
-    // console.log("matchedHighlightItem: ");
-    // console.log(matchedHighlightItem);
+  //   // console.log("matchedHighlightItem: ");
+  //   // console.log(matchedHighlightItem);
 
-    if (matchedHighlightItem) {
-      setTimeout(() => {
-        matchedHighlightItem._hide(true);
-      }, 100);
-    }
+  //   if (matchedHighlightItem) {
+  //     setTimeout(() => {
+  //       matchedHighlightItem._hide(true);
+  //     }, 100);
+  //   }
 
-    setTimeout(() => {
-      this._hide(true);
-    }, 100);
+  //   setTimeout(() => {
+  //     this._hide(true);
+  //   }, 100);
 
-    setTimeout(() => {
-      if (!this.isHighLightItem && this.linkService) {
-        this.linkService.eventBus?.dispatch("annotClosed", {
-          source: this,
-        });
-      }
-    }, 100);
-  }
+  //   setTimeout(() => {
+  //     if (!this.isHighLightItem && this.linkService) {
+  //       this.linkService.eventBus?.dispatch("annotClosed", {
+  //         source: this,
+  //       });
+  //     }
+  //   }, 100);
+  // }
 
   /**
    * 批注和批注弹出支持点击后关闭其他弹出
@@ -1955,7 +1955,7 @@ class PopupElement {
         source: this,
       });
 
-      this.popupElements.forEach(x => x._hide(true));
+      this.popupElements.filter(x => x.pinned).forEach(x => x._hide(true));
 
       // 获取匹配高亮元素
       const matchedHighlightItem = this.popupElements.find(

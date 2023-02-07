@@ -146,6 +146,8 @@ class AnnotationLayerBuilder {
     parameters.div = this.div;
     this.div.hidden = false;
 
+    // 2023年2月6日 陈文磊 渲染时清空Popupelements
+    parameters.popupElements.length = 0;
     AnnotationLayer.render(parameters);
     this.l10n.translate(this.div);
     // const [annotations, hasJSActions = false, fieldObjects = null] =
