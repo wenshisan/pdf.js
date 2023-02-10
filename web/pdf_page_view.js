@@ -187,7 +187,9 @@ class PDFPageView {
     const matchedHighlightItem = this.popupElements.find(
       v => v.data.annotID && v.data.annotID === annotID && !v.isHighLightItem
     );
-    matchedHighlightItem.trigger[0].click();
+    if (matchedHighlightItem) {
+      matchedHighlightItem.trigger[0].click();
+    }
   }
 
   setPdfPage(pdfPage) {
