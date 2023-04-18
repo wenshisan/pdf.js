@@ -4930,7 +4930,7 @@ function _fetchDocument2() {
             _context7.next = 5;
             return worker.messageHandler.sendWithPromise("GetDocRequest", {
               docId: docId,
-              apiVersion: '2.15.275',
+              apiVersion: '2.15.276',
               source: {
                 data: source.data,
                 url: source.url,
@@ -7797,9 +7797,9 @@ var _canvasInUse = {
   writable: true,
   value: new WeakSet()
 };
-var version = '2.15.275';
+var version = '2.15.276';
 exports.version = version;
-var build = '99a6181a4';
+var build = 'fa6f4bfe9';
 exports.build = build;
 
 /***/ }),
@@ -22034,13 +22034,13 @@ var PopupElement = /*#__PURE__*/function () {
           var element = _step18.value;
 
           if (color && this.isHighLightItem) {
-            var _r = annotEnLight * (255 - color[0]) + color[0];
+            var _r2 = annotEnLight * (255 - color[0]) + color[0];
 
-            var _g = annotEnLight * (255 - color[1]) + color[1];
+            var _g2 = annotEnLight * (255 - color[1]) + color[1];
 
-            var _b = annotEnLight * (255 - color[2]) + color[2];
+            var _b2 = annotEnLight * (255 - color[2]) + color[2];
 
-            element.style.backgroundColor = "rgba(".concat(_r, ",\n          ").concat(_g, ",").concat(_b, ",0.3)");
+            element.style.backgroundColor = "rgba(".concat(_r2, ",\n          ").concat(_g2, ",").concat(_b2, ",0.3)");
           }
 
           if (!this.isHighLightItem && element !== this) {
@@ -22055,9 +22055,28 @@ var PopupElement = /*#__PURE__*/function () {
         _iterator18.f();
       }
 
+      if (color && this.isHighLightItem) {
+        var _r = color[0];
+        var _g = color[1];
+        var _b = color[2];
+        var svg = this.createIndecator("rgba(".concat(_r, ",").concat(_g, ",").concat(_b, ",1)"));
+        svg.hidden = false;
+        this.svg = svg;
+        this.container.append(svg);
+      }
+
       popup.addEventListener("click", this._hide.bind(this, true));
       wrapper.append(popup);
       return wrapper;
+    }
+  }, {
+    key: "createIndecator",
+    value: function createIndecator(color) {
+      var svg = document.createElement("div");
+      svg.style.position = "absolute";
+      svg.style.bottom = "10px";
+      svg.innerHTML = "<svg class=\"icon\" width=\"10px\" height=\"10px\" viewBox=\"0 0 1024 1024\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M889.243416 364.166352a362.648713 362.648713 0 0 1-2.155736 40.743413c-6.521102 59.282744-19.724986 116.194178-39.665545 170.84209a900.127628 900.127628 0 0 1-75.450766 157.422632 1081.963972 1081.963972 0 0 1-105.253817 145.134936 1611.304984 1611.304984 0 0 1-129.236382 133.871215 30.988707 30.988707 0 0 1-24.952646 11.802655 32.120469 32.120469 0 0 1-26.030514-11.802655 1579.076728 1579.076728 0 0 1-129.775316-134.949083 1092.203719 1092.203719 0 0 1-106.385579-147.775713 913.439299 913.439299 0 0 1-75.989699-160.171196 710.853995 710.853995 0 0 1-38.533784-172.997826 223.118691 223.118691 0 0 0-0.538934-16.060234 340.875778 340.875778 0 0 1 29.318012-157.476526c19.940559-44.192591 46.887261-82.780268 80.840105-115.655244A385.39173 385.39173 0 0 1 365.507319 28.949381 376.337638 376.337638 0 0 1 512.528524 0.008623a372.403419 372.403419 0 0 1 146.482271 28.940758 387.116319 387.116319 0 0 1 119.427783 78.145435 370.03211 370.03211 0 0 1 80.893999 115.709138c19.940559 44.246484 29.856946 91.403213 29.856945 141.362398z\" fill=\"".concat(color, "\" /><path d=\"M478.306213 188.635536h67.366754v323.360422h-67.366754zM478.306213 579.362713h67.366754V646.729467h-67.366754z\" fill=\"#FFFFFF\" /></svg>");
+      return svg;
     }
   }, {
     key: "onAnnotClick",
@@ -28536,8 +28555,8 @@ var _svg = __w_pdfjs_require__(156);
 
 var _xfa_layer = __w_pdfjs_require__(154);
 
-var pdfjsVersion = '2.15.275';
-var pdfjsBuild = '99a6181a4';
+var pdfjsVersion = '2.15.276';
+var pdfjsBuild = 'fa6f4bfe9';
 {
   if (_is_node.isNodeJS) {
     var _require = __w_pdfjs_require__(157),

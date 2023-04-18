@@ -1902,10 +1902,36 @@ class PopupElement {
     // if (!this.isHighLightItem) {
     //   popup.addEventListener("click", this.onOpopUpClick.bind(this));
     // }
+
+    // 2023年4月18日 添加指示器 陈文磊
+    if (color && this.isHighLightItem) {
+      // const r = svgLight * (255 - color[0]) + color[0];
+      // const g = svgLight * (255 - color[1]) + color[1];
+      // const b = svgLight * (255 - color[2]) + color[2];
+      const r = color[0];
+      const g = color[1];
+      const b = color[2];
+
+      const svg = this.createIndecator(`rgba(${r},${g},${b},1)`);
+      svg.hidden = false;
+      this.svg = svg;
+      this.container.append(svg);
+    }
+
     popup.addEventListener("click", this._hide.bind(this, true));
 
     wrapper.append(popup);
     return wrapper;
+  }
+
+  /** 添加颜色指示器 2023年3月13日 陈文磊 */
+  createIndecator(color) {
+    const svg = document.createElement("div");
+    svg.style.position = "absolute";
+    svg.style.bottom = "10px";
+    // eslint-disable-next-line no-unsanitized/property
+    svg.innerHTML = `<svg class="icon" width="10px" height="10px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M889.243416 364.166352a362.648713 362.648713 0 0 1-2.155736 40.743413c-6.521102 59.282744-19.724986 116.194178-39.665545 170.84209a900.127628 900.127628 0 0 1-75.450766 157.422632 1081.963972 1081.963972 0 0 1-105.253817 145.134936 1611.304984 1611.304984 0 0 1-129.236382 133.871215 30.988707 30.988707 0 0 1-24.952646 11.802655 32.120469 32.120469 0 0 1-26.030514-11.802655 1579.076728 1579.076728 0 0 1-129.775316-134.949083 1092.203719 1092.203719 0 0 1-106.385579-147.775713 913.439299 913.439299 0 0 1-75.989699-160.171196 710.853995 710.853995 0 0 1-38.533784-172.997826 223.118691 223.118691 0 0 0-0.538934-16.060234 340.875778 340.875778 0 0 1 29.318012-157.476526c19.940559-44.192591 46.887261-82.780268 80.840105-115.655244A385.39173 385.39173 0 0 1 365.507319 28.949381 376.337638 376.337638 0 0 1 512.528524 0.008623a372.403419 372.403419 0 0 1 146.482271 28.940758 387.116319 387.116319 0 0 1 119.427783 78.145435 370.03211 370.03211 0 0 1 80.893999 115.709138c19.940559 44.246484 29.856946 91.403213 29.856945 141.362398z" fill="${color}" /><path d="M478.306213 188.635536h67.366754v323.360422h-67.366754zM478.306213 579.362713h67.366754V646.729467h-67.366754z" fill="#FFFFFF" /></svg>`;
+    return svg;
   }
 
   // onOpopUpClick() {
